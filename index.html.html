@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abdoul Mouhamed Diouf — Suivi-Évaluation & Analyse de la Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #F7F2E7;
+    --bg-alt: #EFE7D4;
+    --ink: #1B2430;
+    --ink-soft: #5B5A4E;
+    --gold: #B9852F;
+    --teal: #2F5C52;
+    --line: #D9CFB4;
+    --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14181C;
+      --bg-alt: #1B2026;
+      --ink: #ECE6D8;
+      --ink-soft: #B4AD9B;
+      --gold: #D9A24B;
+      --teal: #6BAE9C;
+      --line: #2B323A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14181C;
+    --bg-alt: #1B2026;
+    --ink: #ECE6D8;
+    --ink-soft: #B4AD9B;
+    --gold: #D9A24B;
+    --teal: #6BAE9C;
+    --line: #2B323A;
+  }
+  html { scroll-behavior: smooth; scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover, a:focus-visible { border-bottom-color: currentColor; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .layout { display: flex; min-height: 100%; max-width: 1180px; margin: 0 auto; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    padding: 48px 32px;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 1px solid var(--line);
+  }
+  .avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--teal); color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 1.6rem; font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .sidebar h1 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 0 0 6px;
+  }
+  .sidebar .role {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    margin: 0 0 28px;
+  }
+  .sidebar nav { display: flex; flex-direction: column; gap: 2px; margin-bottom: 32px; }
+  .sidebar nav a {
+    font-size: 0.92rem;
+    padding: 7px 0;
+    color: var(--ink-soft);
+    border-bottom: none;
+  }
+  .sidebar nav a:hover, .sidebar nav a.active { color: var(--teal); }
+  .sidebar .contact { display: flex; flex-direction: column; gap: 9px; font-size: 0.85rem; color: var(--ink-soft); }
+  .sidebar .contact a { color: var(--ink-soft); }
+  .sidebar .contact a:hover { color: var(--teal); }
+  .theme-toggle {
+    margin-top: 28px;
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    padding: 7px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .theme-toggle:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* ---------- Mobile top bar ---------- */
+  .mobile-bar { display: none; }
+
+  /* ---------- Main content ---------- */
+  main { flex: 1; min-width: 0; padding: 56px 48px 80px; }
+  section { padding-bottom: 56px; margin-bottom: 56px; border-bottom: 1px solid var(--line); scroll-margin-top: 24px; }
+  section:last-of-type { border-bottom: none; }
+  .prose { max-width: 68ch; color: var(--ink); }
+  .prose.soft { color: var(--ink-soft); }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin: 0 0 24px;
+  }
+  h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; margin: 0 0 4px; }
+
+  /* Hero */
+  .hero .lede {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 400;
+    line-height: 1.4;
+    max-width: 30ch;
+    margin: 0 0 28px;
+  }
+  .hero .lede em { font-style: italic; color: var(--teal); }
+  .stats { display: flex; gap: 40px; flex-wrap: wrap; }
+  .stat .num {
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    color: var(--teal);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .label { font-size: 0.82rem; color: var(--ink-soft); }
+
+  /* Skills */
+  .skill-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .skill-groups h3 { font-size: 0.95rem; text-transform: none; color: var(--teal); margin-bottom: 10px; }
+  .skill-groups ul { margin: 0; padding: 0; list-style: none; }
+  .skill-groups li {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    padding: 6px 0;
+    border-top: 1px solid var(--line);
+  }
+  .skill-groups li:first-child { border-top: none; }
+
+  /* Experience ledger */
+  .entry { display: grid; grid-template-columns: 96px 1fr; gap: 20px; padding: 20px 0; border-top: 1px solid var(--line); }
+  .entry:first-child { border-top: none; }
+  .entry .when { font-size: 0.8rem; color: var(--gold); font-weight: 600; padding-top: 3px; }
+  .entry .org { font-size: 0.88rem; color: var(--ink-soft); margin: 2px 0 8px; }
+  .entry p { margin: 0; font-size: 0.92rem; color: var(--ink-soft); max-width: 60ch; }
+
+  /* Projects */
+  .project { padding: 24px 0; border-top: 1px solid var(--line); }
+  .project:first-child { border-top: none; }
+  .project .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 999px;
+    padding: 2px 10px;
+    margin-bottom: 10px;
+  }
+  .project p { max-width: 62ch; color: var(--ink-soft); font-size: 0.92rem; }
+
+  .demo-panel {
+    margin-top: 20px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px;
+    background: var(--bg-alt);
+  }
+  .demo-panel .demo-label {
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .demo-panel canvas { max-height: 220px; }
+
+  /* Publications */
+  .pub { padding: 16px 0; border-top: 1px solid var(--line); font-size: 0.9rem; }
+  .pub:first-child { border-top: none; }
+  .pub .cite { color: var(--ink-soft); }
+  .pub a { font-size: 0.85rem; }
+
+  /* Formation & certifs */
+  .formation-item { padding: 14px 0; border-top: 1px solid var(--line); }
+  .formation-item:first-child { border-top: none; }
+  .formation-item .when { font-size: 0.78rem; color: var(--gold); font-weight: 600; }
+  .cert-list { columns: 2; column-gap: 32px; margin: 0; padding: 0; list-style: none; font-size: 0.88rem; color: var(--ink-soft); }
+  .cert-list li { break-inside: avoid; padding: 5px 0; }
+
+  footer { padding: 40px 48px 60px; font-size: 0.85rem; color: var(--ink-soft); }
+  footer a { color: var(--teal); }
+
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .mobile-bar {
+      display: block;
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 5;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 20px;
+    }
+    .mobile-bar h1 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 500; margin: 0 0 2px; }
+    .mobile-bar .role { font-size: 0.78rem; color: var(--ink-soft); }
+    main { padding: 32px 22px 60px; }
+    .skill-groups { grid-template-columns: 1fr; gap: 22px; }
+    .entry { grid-template-columns: 1fr; gap: 4px; }
+    .cert-list { columns: 1; }
+    footer { padding: 30px 22px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="mobile-bar">
+  <h1>Abdoul Mouhamed Diouf</h1>
+  <div class="role">Suivi-évaluation &amp; analyse de la performance</div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="avatar">AD</div>
+    <h1>Abdoul Mouhamed Diouf</h1>
+    <p class="role">Suivi-évaluation &amp; analyse de la performance</p>
+    <nav>
+      <a href="#profil">Profil</a>
+      <a href="#competences">Compétences</a>
+      <a href="#experience">Expérience</a>
+      <a href="#projets">Projets</a>
+      <a href="#publications">Publications</a>
+      <a href="#formation">Formation</a>
+    </nav>
+    <div class="contact">
+      <a href="mailto:abdoulmouhamedd@gmail.com">abdoulmouhamedd@gmail.com</a>
+      <a href="tel:+221784771603">+221 78 477 16 03</a>
+      <a href="https://orcid.org/0009-0003-9743-404X" target="_blank" rel="noopener">ORCID 0009-0003-9743-404X</a>
+      <span>Dakar, Sénégal</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button">Mode sombre</button>
+  </aside>
+
+  <main>
+    <section class="hero" id="profil">
+      <p class="lede">Transformer des données de terrain en <em>décisions de politique publique.</em></p>
+      <div class="prose">
+        <p>Économiste et spécialiste du suivi-évaluation, doctorant en Sciences Économiques à l'Université Cheikh Anta Diop de Dakar, titulaire d'un Master 2 en Évaluation de l'Impact des Politiques Publiques (mention très bien). Je conçois des systèmes de suivi-évaluation, construis des indicateurs fiables et transforme des bases de données de terrain en tableaux de bord exploitables pour la décision — au service de projets et programmes de développement au Sénégal.</p>
+      </div>
+      <div class="stats" style="margin-top:32px;">
+        <div class="stat"><div class="num" data-target="3" data-suffix="+">0</div><div class="label">ans d'expérience en S&amp;E</div></div>
+        <div class="stat"><div class="num" data-target="5" data-suffix="">0</div><div class="label">institutions accompagnées</div></div>
+        <div class="stat"><div class="num" data-target="4" data-suffix="">0</div><div class="label">publications techniques</div></div>
+      </div>
+    </section>
+
+    <section id="competences">
+      <h2>Compétences</h2>
+      <div class="skill-groups">
+        <div>
+          <h3>Suivi-évaluation &amp; performance</h3>
+          <ul>
+            <li>Plans de travail &amp; plans de S&amp;E</li>
+            <li>Cadres logiques, indicateurs</li>
+            <li>Situations de référence</li>
+            <li>Rapports de performance</li>
+            <li>Systèmes de suivi digitalisés</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Analyse de données</h3>
+          <ul>
+            <li>STATA, R, Python</li>
+            <li>Économétrie &amp; modèles quasi-expérimentaux</li>
+            <li>Modélisation (MEGC)</li>
+            <li>Contrôle qualité des données (DQA)</li>
+            <li>Visualisation &amp; reporting</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Outils</h3>
+          <ul>
+            <li>Power BI, Excel avancé</li>
+            <li>KoboToolbox, ODK</li>
+            <li>PostgreSQL, SQL</li>
+            <li>QGIS, NVivo, XLSTAT</li>
+            <li>MS Project</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience">
+      <h2>Expérience</h2>
+
+      <div class="entry">
+        <div class="when">2025 —<br>présent</div>
+        <div>
+          <h3>Expert(e) junior en suivi-évaluation</h3>
+          <div class="org">Cabinet CEE EVAL, Dakar</div>
+          <p>Structuration de systèmes de suivi-évaluation pour plusieurs institutions publiques sénégalaises : définition d'indicateurs, outils digitalisés, rapports de performance destinés aux décideurs.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when">2025 —<br>présent</div>
+        <div>
+          <h3>Assistant(e) de recherche</h3>
+          <div class="org">LINC &amp; CRES — Consortium pour la Recherche Économique et Sociale</div>
+          <p>Analyses sectorielles sur les transformations économiques, l'emploi des jeunes et des femmes, et l'intelligence artificielle dans l'agriculture au Sénégal.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when">Mars —<br>déc. 2025</div>
+        <div>
+          <h3>Assistant(e) MEAL / évaluateur(trice) d'impact junior</h3>
+          <div class="org">International Livestock Research Institute (ILRI/CGIAR)</div>
+          <p>Conception et supervision d'enquêtes de terrain à grande échelle, contrôle qualité des données, analyses statistiques et spatiales, rédaction de rapports de performance.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when">Jan. —<br>mai 2026</div>
+        <div>
+          <h3>Consultant(e) junior — audit genre</h3>
+          <div class="org">Projet PRIEEG — ENAP</div>
+          <p>Diagnostic institutionnel intégrant les dimensions de genre pour le Ministère de l'Industrie et du Commerce ; collecte et analyse de données qualitatives et quantitatives.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="when">Mai —<br>déc. 2024</div>
+        <div>
+          <h3>Stagiaire en évaluation d'impact</h3>
+          <div class="org">International Livestock Research Institute (ILRI/CGIAR)</div>
+          <p>Méthodes d'évaluation quasi-expérimentales (Propensity Score Matching), traitement et analyse de bases de données de terrain sous STATA.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="projets">
+      <h2>Projets techniques</h2>
+
+      <div class="project">
+        <span class="tag">Data engineering</span>
+        <h3>Pipeline automatisé de contrôle qualité des données</h3>
+        <p>Conception d'une chaîne KoboToolbox → base cloud (PostgreSQL) → Python → Power BI, intégrant les contrôles de complétude et de validité, la détection de doublons et de valeurs aberrantes, et un score de qualité consolidé — restitué dans des tableaux de bord de suivi.</p>
+        <div class="demo-panel">
+          <div class="demo-label">Exemple illustratif — données fictives, à but de démonstration uniquement</div>
+          <canvas id="dqaChart" height="90"></canvas>
+        </div>
+      </div>
+
+      <div class="project">
+        <span class="tag">Modélisation quantitative</span>
+        <h3>Modèle d'équilibre général calculable microsimulé</h3>
+        <p>Conception et estimation d'un MEGC dans le cadre du mémoire de Master, pour analyser l'adoption de l'intelligence artificielle dans l'agriculture et ses effets sur la croissance, l'emploi des jeunes et des femmes, et la dynamique de la classe moyenne au Sénégal.</p>
+      </div>
+
+      <div class="project">
+        <span class="tag">Encadrement académique</span>
+        <h3>Recherche sur la performance d'entreprises bénéficiaires d'un appui public</h3>
+        <p>Co-encadrement d'un mémoire de Master consacré aux déterminants de la performance de PME bénéficiaires d'un dispositif public d'accompagnement, mobilisant l'analyse en composantes principales et la régression quantile pour étudier l'hétérogénéité des effets selon le niveau de performance des entreprises.</p>
+      </div>
+    </section>
+
+    <section id="publications">
+      <h2>Publications</h2>
+
+      <div class="pub">
+        <span class="cite">Thiaw, M., Diouf, A.M., Worou, O.N., Camara, B., Wane, A. (2025). Évaluation d'impact des programmes radiophoniques de AICCRA-Sénégal : connaissances, pratiques agro-écologiques et revenus. AICCRA Report.</span><br>
+        <a href="https://hdl.handle.net/10568/177714" target="_blank" rel="noopener">hdl.handle.net/10568/177714</a>
+      </div>
+      <div class="pub">
+        <span class="cite">Thiaw, M., Diouf, A.M., Worou, O.N., Houessionon, P., Joseph, J.E., Wane, A., Whitbread, A. (2025). iSAT : collecter les retours clés des agriculteurs bénéficiaires via le système Jokalante (IVR). AICCRA Report.</span><br>
+        <a href="https://hdl.handle.net/10568/177687" target="_blank" rel="noopener">hdl.handle.net/10568/177687</a>
+      </div>
+      <div class="pub">
+        <span class="cite">Thiaw, M., Diouf, A.M., Said, S., Kengne, J., Houessionon, P., Edorh, T., Worou, N., Wane, A. (2024). MELIA Results 2024 : évaluation des interventions AICCRA au Sénégal. AICCRA Report.</span><br>
+        <a href="https://hdl.handle.net/10568/168795" target="_blank" rel="noopener">hdl.handle.net/10568/168795</a>
+      </div>
+      <div class="pub">
+        <span class="cite">Diouf, A.M., Thiaw, M., Houessionon, P., Akinseye, F., Worou, N., Wane, A. (2024). Key insight on the use of improved millet and groundnut varieties in dryland areas of Senegal. AICCRA Briefs.</span><br>
+        <a href="https://hdl.handle.net/10568/168717" target="_blank" rel="noopener">hdl.handle.net/10568/168717</a>
+      </div>
+    </section>
+
+    <section id="formation">
+      <h2>Formation &amp; certifications</h2>
+
+      <div class="formation-item">
+        <div class="when">Depuis 2025</div>
+        <h3>Doctorat en Sciences Économiques</h3>
+        <div class="org">Université Cheikh Anta Diop de Dakar (UCAD)</div>
+      </div>
+      <div class="formation-item">
+        <div class="when">2022 – 2023</div>
+        <h3>Master 2 — Évaluation de l'Impact des Politiques Publiques — Mention très bien</h3>
+        <div class="org">FASEG, UCAD</div>
+      </div>
+      <div class="formation-item">
+        <div class="when">2020 – 2022</div>
+        <h3>Master 1 &amp; Licence — Économie, Analyse et Politiques Économiques</h3>
+        <div class="org">FASEG, UCAD</div>
+      </div>
+
+      <ul class="cert-list" style="margin-top:24px;">
+        <li>Intelligence Artificielle — FORCE N (en cours)</li>
+        <li>Data Engineering — FORCE N (en cours)</li>
+        <li>Impact Evaluation in Low- and Middle-Income Countries — World Bank Group</li>
+        <li>Modélisation macroéconomique — IDEP</li>
+        <li>Manage Successful Field Research — DIME, World Bank Group</li>
+        <li>Certificat Assistant Suivi-Évaluation — ABED Academy</li>
+        <li>Gender-sensitive Public Policy</li>
+        <li>MEAL en contextes de développement et d'urgence</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <p>Abdoul Mouhamed Diouf — Dakar, Sénégal · <a href="mailto:abdoulmouhamedd@gmail.com">abdoulmouhamedd@gmail.com</a> · <a href="tel:+221784771603">+221 78 477 16 03</a></p>
+</footer>
+
+<script>
+(function () {
+  // Theme toggle (per-viewer convenience only)
+  var root = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  function apply(mode) {
+    if (mode === 'dark') { root.setAttribute('data-theme', 'dark'); btn.textContent = 'Mode clair'; }
+    else { root.setAttribute('data-theme', 'light'); btn.textContent = 'Mode sombre'; }
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('amd-portfolio-theme'); } catch (e) {}
+  if (saved) apply(saved);
+  btn.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem('amd-portfolio-theme', next); } catch (e) {}
+  });
+
+  // Active nav highlight
+  var links = document.querySelectorAll('.sidebar nav a');
+  var sections = Array.prototype.map.call(links, function (l) { return document.querySelector(l.getAttribute('href')); });
+  function onScroll() {
+    var pos = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function (s) { if (s && s.offsetTop <= pos) current = s; });
+    links.forEach(function (l) {
+      l.classList.toggle('active', current && l.getAttribute('href') === '#' + current.id);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // One orchestrated moment: count-up stats on load
+  document.querySelectorAll('.stat .num').forEach(function (el) {
+    var target = parseInt(el.getAttribute('data-target'), 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    var start = null;
+    var duration = 900;
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      el.textContent = Math.round(progress * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+
+  // Illustrative demo chart (fictional data only)
+  try {
+    var ctx = document.getElementById('dqaChart').getContext('2d');
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var gridColor = 'rgba(150,140,110,0.25)';
+    var textColor = getComputedStyle(root).getPropertyValue('--ink-soft').trim() || '#5B5A4E';
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Collecte 1', 'Collecte 2', 'Collecte 3', 'Collecte 4', 'Collecte 5', 'Collecte 6'],
+        datasets: [{
+          label: 'Score de qualité des données (%) — exemple fictif',
+          data: [74, 81, 85, 88, 93, 96],
+          borderColor: '#B9852F',
+          backgroundColor: 'rgba(185,133,47,0.12)',
+          fill: true,
+          tension: 0.35,
+          pointRadius: 3,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: true, labels: { color: textColor, font: { family: 'Inter', size: 11 } } } },
+        scales: {
+          y: { min: 0, max: 100, grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter', size: 10 } } },
+          x: { grid: { display: false }, ticks: { color: textColor, font: { family: 'Inter', size: 10 } } }
+        }
+      }
+    });
+  } catch (e) { /* chart is decorative; fail silently */ }
+})();
+</script>
+</body>
+</html>
